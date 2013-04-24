@@ -2,7 +2,7 @@
 
 namespace VirtualCollection.VirtualCollection
 {
-    public class VirtualItem<T> : INotifyPropertyChanged where T : class
+    public class VirtualItem<T> : INotifyPropertyChanged where T : class, new()
     {
         private readonly VirtualCollection<T> _parent;
         private readonly int _index;
@@ -16,6 +16,7 @@ namespace VirtualCollection.VirtualCollection
         {
             _parent = parent;
             _index = index;
+            Item = new T();
         }
 
         public T Item

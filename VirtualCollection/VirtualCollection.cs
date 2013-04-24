@@ -16,8 +16,8 @@ namespace VirtualCollection.VirtualCollection
     /// <typeparam name="T"></typeparam>
     /// <remarks>The trick to ensuring that the silverlight datagrid doesn't attempt to enumerate all
     /// items from its DataSource in one shot is to implement both IList and ICollectionView.</remarks>
-    public class VirtualCollection<T> : IList<VirtualItem<T>>, IList, ICollectionView, INotifyPropertyChanged,
-                                        IEnquireAboutItemVisibility where T : class
+    public class VirtualCollection<T> : IList<object>, IList, ICollectionView, INotifyPropertyChanged,
+                                        IEnquireAboutItemVisibility where T : class, new()
     {
         private const int IndividualItemNotificationLimit = 100;
         private const int MaxConcurrentPageRequests = 4;
@@ -302,7 +302,8 @@ namespace VirtualCollection.VirtualCollection
 
                 _inProcessPageRequests++;
 
-                _source.GetPageAsync(request.Page * _pageSize, _pageSize, _sortDescriptions).ContinueWith(
+                var tsk = _source.GetPageAsync(request.Page * _pageSize, _pageSize, _sortDescriptions);
+                tsk.ContinueWith(
                     t =>
                     {
                         if (!t.IsFaulted)
@@ -313,8 +314,9 @@ namespace VirtualCollection.VirtualCollection
                         // fire off any further requests
                         _inProcessPageRequests--;
                         ProcessPageRequests();
-                    },
-                    _synchronizationContextScheduler);
+                    }, _synchronizationContextScheduler);
+
+                tsk.Start();
             }
         }
 
@@ -368,10 +370,15 @@ namespace VirtualCollection.VirtualCollection
                 var virtualItem = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<T>(this, index));
                 if (virtualItem.Item == null || results[i] == null || !_equalityComparer.Equals(virtualItem.Item, results[i]))
                     virtualItem.SupplyValue(results[i]);
+
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, this[startIndex + i], startIndex + i));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, results[i], startIndex + i));
             }
 
             if (count > 0)
-                OnItemsRealized(new ItemsRealizedEventArgs(startIndex, count));
+            {
+                OnItemsRealized(new ItemsRealizedEventArgs(startIndex, count));                
+            }            
         }
 
         protected void UpdateData()
@@ -494,14 +501,19 @@ namespace VirtualCollection.VirtualCollection
             }
         }
 
-        public int IndexOf(VirtualItem<T> item)
+        public int IndexOf(object item)
         {
-            return item.Index;
+            return 0;
+            //todo
+            //return _virtualItems.
+            //return item.Index;
         }
 
         public bool Contains(object item)
         {
-            return item is VirtualItem<T> && Contains(item as VirtualItem<T>);
+            return true;
+            //todo
+            //return item is VirtualItem<T> && Contains(item as VirtualItem<T>);
         }
 
         object IList.this[int index]
@@ -510,7 +522,7 @@ namespace VirtualCollection.VirtualCollection
             set { throw new NotImplementedException(); }
         }
 
-        public VirtualItem<T> this[int index]
+        public object this[int index]
         {
             get
             {
@@ -520,7 +532,8 @@ namespace VirtualCollection.VirtualCollection
                 }
 
                 RealizeItemRequested(index);
-                return _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<T>(this, index));
+                var itm = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<T>(this, index));
+                return itm.Item;
             }
             set { throw new NotImplementedException(); }
         }
@@ -617,7 +630,7 @@ namespace VirtualCollection.VirtualCollection
             if (handler != null) handler(this, e);
         }
 
-        public IEnumerator<VirtualItem<T>> GetEnumerator()
+        public IEnumerator<object> GetEnumerator()
         {
             for (var i = 0; i < _itemCount; i++)
             {
@@ -635,7 +648,7 @@ namespace VirtualCollection.VirtualCollection
             return item.Parent == this;
         }
 
-        public void CopyTo(VirtualItem<T>[] array, int arrayIndex)
+        public void CopyTo(object[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
@@ -645,7 +658,7 @@ namespace VirtualCollection.VirtualCollection
             throw new NotImplementedException();
         }
 
-        public void Add(VirtualItem<T> item)
+        public void Add(object item)
         {
             throw new NotImplementedException();
         }
@@ -681,12 +694,12 @@ namespace VirtualCollection.VirtualCollection
             throw new NotImplementedException();
         }
 
-        public bool Remove(VirtualItem<T> item)
+        public bool Remove(object item)
         {
             throw new NotImplementedException();
         }
 
-        public void Insert(int index, VirtualItem<T> item)
+        public void Insert(int index, object item)
         {
             throw new NotImplementedException();
         }

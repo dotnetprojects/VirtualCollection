@@ -1,199 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{19D96D76-77F4-456C-A04B-44F5FF9172E3}</ProjectGuid>
-    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectGuid>{AEEAA84D-4123-4BA1-8B05-9408D6035F4A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtualCollection</RootNamespace>
-    <AssemblyName>VirtualCollection</AssemblyName>
-    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
-    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
-    <SilverlightApplication>true</SilverlightApplication>
-    <SupportedCultures>
-    </SupportedCultures>
-    <XapOutputs>true</XapOutputs>
-    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>VirtualCollection.xap</XapFilename>
-    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>VirtualCollection.App</SilverlightAppEntry>
-    <TestPageFileName>VirtualCollectionTestPage.html</TestPageFileName>
-    <CreateTestPage>true</CreateTestPage>
-    <ValidateXaml>true</ValidateXaml>
-    <EnableOutOfBrowser>false</EnableOutOfBrowser>
-    <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
-    <UsePlatformExtensions>false</UsePlatformExtensions>
-    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
-    <LinkedServerProject>
-    </LinkedServerProject>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <!-- This property group is only here to support building this project using the 
-       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
-       to set the TargetFrameworkVersion to v3.5 -->
-  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <RootNamespace>VirtualCollectionWPF</RootNamespace>
+    <AssemblyName>VirtualCollectionWPF</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>Bin\Release</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Data.Edm.SL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.3.0\lib\sl4\Microsoft.Data.Edm.SL.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.OData.SL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.3.0\lib\sl4\Microsoft.Data.OData.SL.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.Services.Client.SL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.3.0\lib\sl4\Microsoft.Data.Services.Client.SL.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Expression.Interactions">
-      <HintPath>..\packages\Blend.Interactivity.Silverlight.2.0.20520.0\lib\sl\Microsoft.Expression.Interactions.dll</HintPath>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="System.Reactive.Core">
-      <HintPath>..\packages\Rx-Core.2.1.30214.0\lib\SL5\System.Reactive.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Interfaces">
-      <HintPath>..\packages\Rx-Interfaces.2.1.30214.0\lib\SL5\System.Reactive.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Linq">
-      <HintPath>..\packages\Rx-Linq.2.1.30214.0\lib\SL5\System.Reactive.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
-      <HintPath>..\packages\Rx-PlatformServices.2.1.30214.0\lib\SL5\System.Reactive.PlatformServices.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Windows.Threading">
-      <HintPath>..\packages\Rx-Xaml.2.1.30214.0\lib\SL5\System.Reactive.Windows.Threading.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Spatial.SL">
-      <HintPath>..\packages\System.Spatial.5.3.0\lib\sl4\System.Spatial.SL.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows" />
-    <Reference Include="system" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Controls, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Windows.Controls.Data, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Windows.Controls.Toolkit">
-      <HintPath>..\packages\SilverlightToolkit-Core.4.2010.4\lib\sl4\System.Windows.Controls.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\packages\Blend.Interactivity.Silverlight.2.0.20520.0\lib\sl\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Windows.Browser" />
-    <Reference Include="System.Xml.Linq, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BusynessIndicator.xaml.cs">
-      <DependentUpon>BusynessIndicator.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Demo\NetflixTitlesSource.cs" />
-    <Compile Include="Demo\MainViewModel.cs" />
-    <Compile Include="Demo\Schedulers.cs" />
-    <Compile Include="Demo\StringToImageConverter.cs" />
-    <Compile Include="Framework\Behaviors\NotifyViewModelOfLifeCycleEvents.cs" />
-    <Compile Include="Framework\Converters\StringValueConversion.cs" />
-    <Compile Include="Framework\Converters\StringValueConversionCollection.cs" />
-    <Compile Include="Framework\Converters\StringValueToObjectConverter.cs" />
-    <Compile Include="Framework\Extensions\INotifyPropertyChangedExtensions.cs" />
-    <Compile Include="Framework\Extensions\SymbolExtensions.cs" />
-    <Compile Include="Framework\MVVM\ActionCommand.cs" />
-    <Compile Include="Framework\MVVM\CommandBase.cs" />
-    <Compile Include="Framework\MVVM\CommandHolder.cs" />
-    <Compile Include="Framework\MVVM\IViewModel.cs" />
-    <Compile Include="Framework\MVVM\ViewModel.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="DeferredActionInvoker.cs" />
+    <Compile Include="Disposer.cs" />
+    <Compile Include="IEnquireAboutItemVisibility.cs" />
+    <Compile Include="INotifyBusyness.cs" />
+    <Compile Include="ItemsRealizedEventArgs.cs" />
+    <Compile Include="IVirtualCollectionSource.cs" />
+    <Compile Include="MostRecentUsedList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\Netflix\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.datasvcmap</DependentUpon>
-    </Compile>
-    <Compile Include="VirtualCollection\DeferredActionInvoker.cs" />
-    <Compile Include="VirtualCollection\Disposer.cs" />
-    <Compile Include="VirtualCollection\IEnquireAboutItemVisibility.cs" />
-    <Compile Include="VirtualCollection\INotifyBusyness.cs" />
-    <Compile Include="VirtualCollection\ItemsRealizedEventArgs.cs" />
-    <Compile Include="VirtualCollection\IVirtualCollectionSource.cs" />
-    <Compile Include="VirtualCollection\MostRecentUsedList.cs" />
-    <Compile Include="VirtualCollection\ProvideVisibleItemRangeFromDataGridBehavior.cs" />
-    <Compile Include="VirtualCollection\ProvideVisibleItemRangeFromItemsControlBehavior.cs" />
-    <Compile Include="VirtualCollection\RefreshMode.cs" />
-    <Compile Include="VirtualCollection\SparseList.cs" />
-    <Compile Include="VirtualCollection\VirtualCollection.cs" />
-    <Compile Include="VirtualCollection\VirtualCollectionSource.cs" />
-    <Compile Include="VirtualCollection\VirtualItem.cs" />
-    <Compile Include="VirtualCollection\VirtualizingWrapPanel.cs" />
-    <Compile Include="VirtualCollection\WeakCollectionViewWrapper.cs" />
-    <Compile Include="VirtualCollection\WeakEventListener.cs" />
+    <Compile Include="RefreshMode.cs" />
+    <Compile Include="SparseList.cs" />
+    <Compile Include="VirtualCollection.cs" />
+    <Compile Include="VirtualCollectionSource.cs" />
+    <Compile Include="VirtualItem.cs" />
+    <Compile Include="WeakCollectionViewWrapper.cs" />
+    <Compile Include="WeakEventListener.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-    <Page Include="BusynessIndicator.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MainPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Properties\AppManifest.xml" />
-    <None Include="Service References\Netflix\service.edmx" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\Netflix\Reference.datasvcmap">
-      <Generator>DataServicesCoreClientGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ServiceReferenceMetadataStorage Include="Service References\Netflix\">
-      <Type>datasvcmap</Type>
-    </ServiceReferenceMetadataStorage>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -201,12 +67,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
-        <SilverlightProjectProperties />
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
