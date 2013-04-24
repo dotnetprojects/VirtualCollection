@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public interface IVirtualCollectionSource<T>
     {

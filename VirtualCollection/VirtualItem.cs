@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public class VirtualItem<T> : INotifyPropertyChanged where T : class, new()
     {

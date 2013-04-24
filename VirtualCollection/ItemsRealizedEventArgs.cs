@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public class ItemsRealizedEventArgs : EventArgs
     {

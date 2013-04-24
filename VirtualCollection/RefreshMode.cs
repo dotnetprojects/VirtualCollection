@@ -1,4 +1,4 @@
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public enum RefreshMode
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     /// <summary>
     /// A list which can support a huge virtual item count

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
     {

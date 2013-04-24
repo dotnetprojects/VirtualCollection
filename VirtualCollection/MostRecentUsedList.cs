@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public class MostRecentUsedList<T> : IEnumerable<T>
     {

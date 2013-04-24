@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public abstract class VirtualCollectionSource<T> : IVirtualCollectionSource<T>, INotifyBusyness
     {

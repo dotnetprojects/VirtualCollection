@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     /// <summary>
     /// This class exists because of a bug/oversight in Silverlight, where ListBox does not unsubscribe to

@@ -10,7 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public class DeferredActionInvoker
     {

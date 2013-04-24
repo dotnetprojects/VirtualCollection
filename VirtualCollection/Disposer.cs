@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     public class Disposer : IDisposable
     {

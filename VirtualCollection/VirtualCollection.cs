@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
     /// <summary>
     /// Implements a collection that loads its items by pages only when requested
@@ -120,12 +120,12 @@ namespace VirtualCollection.VirtualCollection
 
         public ObservableCollection<GroupDescription> GroupDescriptions
         {
-            get { throw new NotImplementedException(); }
+            get { return new ObservableCollection<GroupDescription>(); }
         }
 
         public ReadOnlyObservableCollection<object> Groups
         {
-            get { throw new NotImplementedException(); }
+            get { return new ReadOnlyObservableCollection<object>(new ObservableCollection<object>()); }
         }
 
         public bool IsEmpty

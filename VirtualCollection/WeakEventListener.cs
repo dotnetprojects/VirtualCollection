@@ -9,7 +9,7 @@
 
 using System;
 
-namespace VirtualCollection.VirtualCollection
+namespace VirtualCollection
 {
 	/// <summary>
 	/// Implements a weak event listener that allows the owner to be garbage
