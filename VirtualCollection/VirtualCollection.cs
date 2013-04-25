@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace VirtualCollection
 {
@@ -67,6 +68,9 @@ namespace VirtualCollection
 
             if (equalityComparer == null)
                 throw new ArgumentNullException("equalityComparer");
+
+            if (cachedPages < 5)
+                cachedPages = 5;
 
             _source = source;
             _source.CollectionChanged += HandleSourceCollectionChanged;
@@ -706,8 +710,11 @@ namespace VirtualCollection
 
         int IList.IndexOf(object value)
         {
-            var virtualItem = value as VirtualItem<T>;
-            return virtualItem == null ? -1 : virtualItem.Index;
+            var itm = _virtualItems.FirstOrDefault(x => x != null && x.Item == value);
+
+            if (itm != null)
+                return itm.Index;
+            return -1;
         }
 
         void IList.Insert(int index, object value)

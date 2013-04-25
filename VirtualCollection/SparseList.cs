@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace VirtualCollection
 {
@@ -9,7 +13,7 @@ namespace VirtualCollection
     /// in pages.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class SparseList<T> where T:class 
+    public class SparseList<T> : IEnumerable<T> where T:class 
     {
         private readonly int _pageSize;
         private readonly PageList _allocatedPages;
@@ -20,6 +24,8 @@ namespace VirtualCollection
             _pageSize = pageSize;
             _allocatedPages = new PageList(_pageSize);
         }
+
+
 
         /// <remarks>This method is optimised for sequential access. I.e. it performs
         /// best when getting and setting indicies in the same locality</remarks>
@@ -93,7 +99,7 @@ namespace VirtualCollection
         private class Page
         {
             private readonly int _pageIndex;
-            private readonly T[] _items;
+            internal readonly T[] _items;
 
             public Page(int pageIndex, int pageSize)
             {
@@ -160,6 +166,22 @@ namespace VirtualCollection
 
                 return this[pageIndex];
             }
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            foreach (var allocatedPage in _allocatedPages)
+            {
+                foreach (var item in allocatedPage._items)
+                {
+                    yield return item;
+                }                
+            }            
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<T>) this).GetEnumerator();
         }
     }
 }
