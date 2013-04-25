@@ -10,6 +10,8 @@ namespace VirtualCollection
         private bool _isStale;
         private bool dataFetchError;
 
+        internal bool IsAskedByIndex { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public VirtualItem(VirtualCollection<T> parent, int index)
@@ -25,7 +27,7 @@ namespace VirtualCollection
             {
                 if (!IsRealized && !DataFetchError)
                 {
-                    _parent.RealizeItemRequested(Index);
+                    _parent.RealizeItemRequested(Index, false);
                 }
                 return _item;
             }

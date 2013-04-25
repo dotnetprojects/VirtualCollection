@@ -17,6 +17,9 @@ namespace VirtualCollection
     /// <remarks>The trick to ensuring that the silverlight datagrid doesn't attempt to enumerate all
     /// items from its DataSource in one shot is to implement both IList and ICollectionView.</remarks>
     public class VirtualCollection<T> : IList<object>, IList, ICollectionView, INotifyPropertyChanged,
+#if !SILVERLIGHT
+                                        IItemProperties,
+#endif
                                         IEnquireAboutItemVisibility where T : class, new()
     {
         private const int IndividualItemNotificationLimit = 100;
@@ -158,7 +161,12 @@ namespace VirtualCollection
         }
         public int Count
         {
-            get { return _itemCount; }
+            get
+            {
+                if (_itemCount == 0)
+                    UpdateCount();
+                return _itemCount;
+            }
         }
 
         object ICollection.SyncRoot
@@ -186,10 +194,15 @@ namespace VirtualCollection
             get { return _state; }
         }
 
-        public void RealizeItemRequested(int index)
+        public void RealizeItemRequested(int index, bool byIndex)
         {
             var page = index / _pageSize;
             BeginGetPage(page);
+
+            if (byIndex && ((Count / _pageSize) - 1 > page))
+                BeginGetPage(page + 1, true);
+            if (byIndex && (page > 0))
+                BeginGetPage(page - 1, true);
         }
 
         public void Refresh()
@@ -268,7 +281,7 @@ namespace VirtualCollection
             }
         }
 
-        private void BeginGetPage(int page)
+        private void BeginGetPage(int page, bool previousNextRequest = false)
         {
             if (IsPageAlreadyRequested(page))
                 return;
@@ -276,7 +289,7 @@ namespace VirtualCollection
             _mostRecentlyRequestedPages.Add(page);
             _requestedPages.Add(page);
 
-            _pendingPageRequests.Push(new PageRequest(page, State));
+            _pendingPageRequests.Push(new PageRequest(page, State, previousNextRequest));
 
             ProcessPageRequests();
         }
@@ -307,7 +320,7 @@ namespace VirtualCollection
                     t =>
                     {
                         if (!t.IsFaulted)
-                            UpdatePage(request.Page, t.Result, request.StateWhenRequested);
+                            UpdatePage(request.Page, t.Result, request.StateWhenRequested, request.PreviousNextRequest);
                         else
                             MarkPageAsError(request.Page, request.StateWhenRequested);
 
@@ -345,7 +358,7 @@ namespace VirtualCollection
             return _fetchedPages.Contains(page) || _requestedPages.Contains(page);
         }
 
-        private void UpdatePage(int page, IList<T> results, uint stateWhenRequested)
+        private void UpdatePage(int page, IList<T> results, uint stateWhenRequested, bool previousNextRequest)
         {
             if (stateWhenRequested != State)
             {
@@ -371,8 +384,17 @@ namespace VirtualCollection
                 if (virtualItem.Item == null || results[i] == null || !_equalityComparer.Equals(virtualItem.Item, results[i]))
                     virtualItem.SupplyValue(results[i]);
 
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, this[startIndex + i], startIndex + i));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, results[i], startIndex + i));
+                if (!previousNextRequest || virtualItem.IsAskedByIndex)
+                {
+//#if SILVERLIGHT
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
+                        _virtualItems[startIndex + i], startIndex + i));
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
+                        results[i], startIndex + i));
+//#else
+//                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+//#endif
+                }
             }
 
             if (count > 0)
@@ -518,7 +540,7 @@ namespace VirtualCollection
 
         object IList.this[int index]
         {
-            get { return this[index]; }
+            get { return getbyIndex(index, true); }
             set { throw new NotImplementedException(); }
         }
 
@@ -526,16 +548,25 @@ namespace VirtualCollection
         {
             get
             {
-                if (index >= Count)
-                {
-                    throw new ArgumentOutOfRangeException("index");
-                }
-
-                RealizeItemRequested(index);
-                var itm = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<T>(this, index));
-                return itm.Item;
+                return getbyIndex(index, false);
             }
             set { throw new NotImplementedException(); }
+        }
+
+        private object getbyIndex(int index, bool byIlist)
+        {
+            if (index >= Count)
+            {
+                throw new ArgumentOutOfRangeException("index");
+            }
+
+            if (byIlist)
+                RealizeItemRequested(index, true);
+            var itm = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<T>(this, index));
+
+            itm.IsAskedByIndex = byIlist;
+
+            return itm.Item;
         }
 
         public IDisposable DeferRefresh()
@@ -643,11 +674,6 @@ namespace VirtualCollection
             return GetEnumerator();
         }
 
-        public bool Contains(VirtualItem<T> item)
-        {
-            return item.Parent == this;
-        }
-
         public void CopyTo(object[] array, int arrayIndex)
         {
             throw new NotImplementedException();
@@ -714,11 +740,36 @@ namespace VirtualCollection
             public readonly int Page;
             public readonly uint StateWhenRequested;
 
-            public PageRequest(int page, uint state)
+            public readonly bool PreviousNextRequest;
+
+            public PageRequest(int page, uint state, bool previousNextRequest)
             {
                 Page = page;
                 StateWhenRequested = state;
+                PreviousNextRequest = previousNextRequest;
             }
         }
+
+#if !SILVERLIGHT
+        private ReadOnlyCollection<ItemPropertyInfo> _itemProperties;
+
+        public ReadOnlyCollection<ItemPropertyInfo> ItemProperties
+        {
+            get
+            {
+                if (_itemProperties == null)
+                {
+                    List<ItemPropertyInfo> retVal = new List<ItemPropertyInfo>();
+                    foreach (var propertyInfo in typeof (T).GetProperties())
+                    {
+                        retVal.Add(new ItemPropertyInfo(propertyInfo.Name, propertyInfo.PropertyType, null));
+                    }
+
+                    _itemProperties = new ReadOnlyCollection<ItemPropertyInfo>(retVal);
+                }
+                return _itemProperties;
+            }
+        }
+#endif
     }
 }
