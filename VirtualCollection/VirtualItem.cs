@@ -59,12 +59,12 @@ namespace VirtualCollection
         public void ClearValue()
         {
             DataFetchError = false;
-            Item = null;
+            Item = new T();
         }
 
         public void ErrorFetchingValue()
         {
-            Item = null;
+            Item = new T();
             DataFetchError = true;
         }
 

@@ -392,7 +392,7 @@ namespace VirtualCollection
                 {
 //#if SILVERLIGHT
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
-                        _virtualItems[startIndex + i], startIndex + i));
+                        _virtualItems[startIndex + i].Item, startIndex + i));
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
                         results[i], startIndex + i));
 //#else
@@ -472,8 +472,14 @@ namespace VirtualCollection
             _fetchedPages.Clear();
             _requestedPages.Clear();
 
+            _currentItem = -1;
             UpdateCount(0);
+            
+            //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
             UpdateCount();
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         private void UpdateCount()
