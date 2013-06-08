@@ -24,7 +24,7 @@ namespace VirtualCollection
                                         IEnquireAboutItemVisibility where T : class, new()
     {
         private const int IndividualItemNotificationLimit = 100;
-        private const int MaxConcurrentPageRequests = 4;
+        private const int MaxConcurrentPageRequests = 6;
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -69,8 +69,8 @@ namespace VirtualCollection
             if (equalityComparer == null)
                 throw new ArgumentNullException("equalityComparer");
 
-            if (cachedPages < 5)
-                cachedPages = 5;
+            if (cachedPages < 8)
+                cachedPages = 8;
 
             _source = source;
             _source.CollectionChanged += HandleSourceCollectionChanged;
@@ -496,6 +496,8 @@ namespace VirtualCollection
             }
         }
 
+        private bool firstCountChange = true;
+
         private void UpdateCount(int count)
         {
             if (_itemCount == count)
@@ -512,8 +514,11 @@ namespace VirtualCollection
 
             OnPropertyChanged(new PropertyChangedEventArgs("Count"));
 
-            if (Math.Abs(delta) > IndividualItemNotificationLimit || _itemCount == 0)
+            if ((delta > 0 && firstCountChange) || Math.Abs(delta) > IndividualItemNotificationLimit || _itemCount == 0)
+            {
+                firstCountChange = false;
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
             else if (delta > 0)
             {
                 for (int i = 0; i < delta; i++)
