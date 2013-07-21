@@ -47,6 +47,7 @@
     <Compile Include="Disposer.cs" />
     <Compile Include="IEnquireAboutItemVisibility.cs" />
     <Compile Include="INotifyBusyness.cs" />
+    <Compile Include="IQueryableExtensions.cs" />
     <Compile Include="ItemsRealizedEventArgs.cs" />
     <Compile Include="IVirtualCollectionSource.cs" />
     <Compile Include="MostRecentUsedList.cs" />

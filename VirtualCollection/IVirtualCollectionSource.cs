@@ -1,18 +1,25 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace VirtualCollection
 {
-    public interface IVirtualCollectionSource<T>
+    public interface IVirtualCollectionSource
     {
+        Type CollectionType { get; }
+
         event EventHandler<VirtualCollectionSourceChangedEventArgs> CollectionChanged;
         event EventHandler<EventArgs> CountChanged;
 
         int? Count { get; }
         void Refresh(RefreshMode mode);
-        Task<IList<T>> GetPageAsync(int start, int pageSize, IList<SortDescription> sortDescriptions);
+        Task<IList> GetPageAsync(int start, int pageSize, IList<SortDescription> sortDescriptions);
+    }
+    public interface IVirtualCollectionSource<T> : IVirtualCollectionSource
+    {
+        Task<IList<T>> GetPageAsyncT(int start, int pageSize, IList<SortDescription> sortDescriptions);
     }
 
     public class VirtualCollectionSourceChangedEventArgs : EventArgs

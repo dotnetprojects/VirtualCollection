@@ -4,7 +4,7 @@ namespace VirtualCollection
 {
     public class VirtualItem<T> : INotifyPropertyChanged where T : class, new()
     {
-        private readonly VirtualCollection<T> _parent;
+        private readonly VirtualCollection _parent;
         private readonly int _index;
         private T _item;
         private bool _isStale;
@@ -14,7 +14,7 @@ namespace VirtualCollection
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public VirtualItem(VirtualCollection<T> parent, int index)
+        public VirtualItem(VirtualCollection parent, int index)
         {
             _parent = parent;
             _index = index;
@@ -85,7 +85,7 @@ namespace VirtualCollection
             get { return _index; }
         }
 
-        public VirtualCollection<T> Parent
+        public VirtualCollection Parent
         {
             get { return _parent; }
         }

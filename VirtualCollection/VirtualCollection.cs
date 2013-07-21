@@ -17,11 +17,11 @@ namespace VirtualCollection
     /// <typeparam name="T"></typeparam>
     /// <remarks>The trick to ensuring that the silverlight datagrid doesn't attempt to enumerate all
     /// items from its DataSource in one shot is to implement both IList and ICollectionView.</remarks>
-    public class VirtualCollection<T> : IList<object>, IList, ICollectionView, INotifyPropertyChanged,
+    public class VirtualCollection : IList<object>, IList, ICollectionView, INotifyPropertyChanged,
 #if !SILVERLIGHT
                                         IItemProperties,
 #endif
-                                        IEnquireAboutItemVisibility where T : class, new()
+                                        IEnquireAboutItemVisibility //where T : class, new()
     {
         private const int IndividualItemNotificationLimit = 100;
         private const int MaxConcurrentPageRequests = 6;
@@ -33,13 +33,13 @@ namespace VirtualCollection
         public event EventHandler<ItemsRealizedEventArgs> ItemsRealized;
         public event CurrentChangingEventHandler CurrentChanging;
         public event EventHandler CurrentChanged;
-        private readonly IVirtualCollectionSource<T> _source;
+        private readonly IVirtualCollectionSource _source;
         private readonly int _pageSize;
-        private readonly IEqualityComparer<T> _equalityComparer;
+        private readonly IEqualityComparer<object> _equalityComparer;
 
         private uint _state; // used to ensure that data-requests are not stale
 
-        private readonly SparseList<VirtualItem<T>> _virtualItems;
+        private readonly SparseList<VirtualItem<object>> _virtualItems;
         private readonly HashSet<int> _fetchedPages = new HashSet<int>();
         private readonly HashSet<int> _requestedPages = new HashSet<int>();
 
@@ -54,14 +54,14 @@ namespace VirtualCollection
 
         private readonly SortDescriptionCollection _sortDescriptions = new SortDescriptionCollection();
 
-        public VirtualCollection(IVirtualCollectionSource<T> source, int pageSize, int cachedPages)
-            : this(source, pageSize, cachedPages, EqualityComparer<T>.Default)
+        public VirtualCollection(IVirtualCollectionSource source, int pageSize, int cachedPages)
+            : this(source, pageSize, cachedPages, EqualityComparer<object>.Default)
         {
 
         }
 
-        public VirtualCollection(IVirtualCollectionSource<T> source, int pageSize, int cachedPages,
-                                 IEqualityComparer<T> equalityComparer)
+        public VirtualCollection(IVirtualCollectionSource source, int pageSize, int cachedPages,
+                                 IEqualityComparer<object> equalityComparer)
         {
             if (pageSize < 1)
                 throw new ArgumentException("pageSize must be bigger than 0");
@@ -88,7 +88,7 @@ namespace VirtualCollection
 
 
 
-        public IVirtualCollectionSource<T> Source
+        public IVirtualCollectionSource Source
         {
             get { return _source; }
         }
@@ -227,7 +227,7 @@ namespace VirtualCollection
             _virtualItems.RemoveRange(e.Item * _pageSize, _pageSize);
         }
 
-        private SparseList<VirtualItem<T>> CreateItemsCache(int fetchPageSize)
+        private SparseList<VirtualItem<object>> CreateItemsCache(int fetchPageSize)
         {
             // we don't want the sparse list to have pages that are too small,
             // because that will harm performance by fragmenting the list across memory,
@@ -242,7 +242,7 @@ namespace VirtualCollection
                 pageSize = (int)Math.Ceiling((double)TargetSparseListPageSize / pageSize) * pageSize;
             }
 
-            return new SparseList<VirtualItem<T>>(pageSize);
+            return new SparseList<VirtualItem<object>>(pageSize);
         }
 
         private void HandleSortDescriptionsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -362,7 +362,7 @@ namespace VirtualCollection
             return _fetchedPages.Contains(page) || _requestedPages.Contains(page);
         }
 
-        private void UpdatePage(int page, IList<T> results, uint stateWhenRequested, bool previousNextRequest)
+        private void UpdatePage(int page, IList results, uint stateWhenRequested, bool previousNextRequest)
         {
             if (stateWhenRequested != State)
             {
@@ -384,7 +384,7 @@ namespace VirtualCollection
             for (int i = 0; i < count; i++)
             {
                 var index = startIndex + i;
-                var virtualItem = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<T>(this, index));
+                var virtualItem = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<object>(this, index));
                 if (virtualItem.Item == null || results[i] == null || !_equalityComparer.Equals(virtualItem.Item, results[i]))
                     virtualItem.SupplyValue(results[i]);
 
@@ -577,7 +577,7 @@ namespace VirtualCollection
 
             if (byIlist)
                 RealizeItemRequested(index, true);
-            var itm = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<T>(this, index));
+            var itm = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<object>(this, index));
 
             itm.IsAskedByIndex = byIlist;
 
@@ -711,7 +711,7 @@ namespace VirtualCollection
 
         bool IList.Contains(object value)
         {
-            return value is VirtualItem<T> && Contains(value as VirtualItem<T>);
+            return value is VirtualItem<object> && Contains(value as VirtualItem<object>);
         }
 
         public void Clear()
@@ -778,9 +778,9 @@ namespace VirtualCollection
                 if (_itemProperties == null)
                 {
                     List<ItemPropertyInfo> retVal = new List<ItemPropertyInfo>();
-                    foreach (var propertyInfo in typeof (T).GetProperties())
+                    foreach (var propertyInfo in _source.CollectionType.GetProperties())
                     {
-                        retVal.Add(new ItemPropertyInfo(propertyInfo.Name, propertyInfo.PropertyType, null));
+                        retVal.Add(new ItemPropertyInfo(propertyInfo.Name, propertyInfo.PropertyType, propertyInfo));
                     }
 
                     _itemProperties = new ReadOnlyCollection<ItemPropertyInfo>(retVal);
