@@ -523,7 +523,8 @@ namespace VirtualCollection
             {
                 for (int i = 0; i < delta; i++)
                 {
-                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, null,
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, 
+                                                                             _virtualItems[originalItemCount + i],
                                                                              originalItemCount + i));
                 }
             }
