@@ -56,12 +56,19 @@ namespace VirtualCollection
 
         public VirtualCollection(IVirtualCollectionSource source, int pageSize, int cachedPages)
             : this(source, pageSize, cachedPages, EqualityComparer<object>.Default)
-        {
+        { }
 
-        }
+        public VirtualCollection(IVirtualCollectionSource source, int pageSize, int cachedPages, TaskScheduler taskScheduler)
+            : this(source, pageSize, cachedPages, EqualityComparer<object>.Default, taskScheduler)
+        { }
 
         public VirtualCollection(IVirtualCollectionSource source, int pageSize, int cachedPages,
-                                 IEqualityComparer<object> equalityComparer)
+            IEqualityComparer<object> equalityComparer)
+            : this(source, pageSize, cachedPages, equalityComparer, null)
+        { }
+
+        public VirtualCollection(IVirtualCollectionSource source, int pageSize, int cachedPages,
+                                 IEqualityComparer<object> equalityComparer, TaskScheduler taskScheduler)
         {
             if (pageSize < 1)
                 throw new ArgumentException("pageSize must be bigger than 0");
@@ -79,7 +86,7 @@ namespace VirtualCollection
             _equalityComparer = equalityComparer;
             _virtualItems = CreateItemsCache(pageSize);
             _currentItem = -1;
-            _synchronizationContextScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            _synchronizationContextScheduler = taskScheduler ?? TaskScheduler.FromCurrentSynchronizationContext();
             _mostRecentlyRequestedPages = new MostRecentUsedList<int>(cachedPages);
             _mostRecentlyRequestedPages.ItemEvicted += HandlePageEvicted;
 
