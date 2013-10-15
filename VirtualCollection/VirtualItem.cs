@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace VirtualCollection
 {
@@ -78,7 +79,11 @@ namespace VirtualCollection
             }
         }
 
+#if SILVERLIGHT
+        public bool IsRealized { get { return _item.GetType() != typeof(object); } }
+#else
         public bool IsRealized { get { return _item != null; } }
+#endif
 
         public int Index
         {

@@ -369,6 +369,7 @@ namespace VirtualCollection
             return _fetchedPages.Contains(page) || _requestedPages.Contains(page);
         }
 
+        private bool firstTimeIndexZero = true;
         private void UpdatePage(int page, IList results, uint stateWhenRequested, bool previousNextRequest)
         {
             if (stateWhenRequested != State)
@@ -397,14 +398,25 @@ namespace VirtualCollection
 
                 if (!previousNextRequest || virtualItem.IsAskedByIndex)
                 {
-//#if SILVERLIGHT
+#if SILVERLIGHT
+                    if (firstTimeIndexZero && i == 0)
+                    {
+                        firstTimeIndexZero = false;
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                    }
+                    else
+                    {
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
+                            _virtualItems[startIndex + i].Item, startIndex + i));
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
+                            results[i], startIndex + i));
+                    }
+#else
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
-                        _virtualItems[startIndex + i].Item, startIndex + i));
+                            _virtualItems[startIndex + i].Item, startIndex + i));
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
-                        results[i], startIndex + i));
-//#else
-//                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-//#endif
+                            results[i], startIndex + i));
+#endif
                 }
             }
 
