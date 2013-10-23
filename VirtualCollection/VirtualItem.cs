@@ -26,7 +26,7 @@ namespace VirtualCollection
         {
             get
             {
-                if (!IsRealized && !DataFetchError)
+                if (!IsRealized && !DataFetchError && IsAskedByIndex)
                 {
                     _parent.RealizeItemRequested(Index, false);
                 }

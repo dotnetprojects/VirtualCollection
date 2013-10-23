@@ -24,7 +24,7 @@ namespace VirtualCollection
                                         IEnquireAboutItemVisibility //where T : class, new()
     {
         private const int IndividualItemNotificationLimit = 100;
-        private const int MaxConcurrentPageRequests = 6;
+        private const int MaxConcurrentPageRequests = 1;
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -597,6 +597,10 @@ namespace VirtualCollection
 
             if (byIlist)
                 RealizeItemRequested(index, true);
+
+            if (!byIlist)
+                return null;
+
             var itm = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<object>(this, index));
 
             itm.IsAskedByIndex = byIlist;
@@ -700,7 +704,7 @@ namespace VirtualCollection
         {
             for (var i = 0; i < _itemCount; i++)
             {
-                yield return this[i];
+                yield return getbyIndex(i, false);
             }
         }
 
