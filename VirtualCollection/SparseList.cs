@@ -25,6 +25,12 @@ namespace VirtualCollection
             _allocatedPages = new PageList(_pageSize);
         }
 
+        public void Clear()
+        {
+            _allocatedPages.Clear();
+            _currentPage = null;
+        }
+
 
 
         /// <remarks>This method is optimised for sequential access. I.e. it performs

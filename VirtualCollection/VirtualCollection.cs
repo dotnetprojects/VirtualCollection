@@ -223,6 +223,10 @@ namespace VirtualCollection
 
         public void Refresh(RefreshMode mode)
         {
+            _fetchedPages.Clear();
+            //_virtualItems.Clear();
+            _requestedPages.Clear();
+
             if (!_isRefreshDeferred)
                 _source.Refresh(mode);
         }
