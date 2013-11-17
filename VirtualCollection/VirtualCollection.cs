@@ -555,9 +555,13 @@ namespace VirtualCollection
             {
                 for (int i = 1; i <= Math.Abs(delta); i++)
                 {
-                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
-                                                                             _virtualItems[originalItemCount - i],
-                                                                             originalItemCount - i));
+                    var itm = _virtualItems[originalItemCount - i];
+                    if (itm != null)
+                    {
+                        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
+                            itm,
+                            originalItemCount - i));
+                    }
                 }
             }
         }
