@@ -224,6 +224,7 @@ namespace VirtualCollection
         public void Refresh(RefreshMode mode)
         {
             _fetchedPages.Clear();
+            _itemCount = 0;
             //_virtualItems.Clear();
             _requestedPages.Clear();
 
