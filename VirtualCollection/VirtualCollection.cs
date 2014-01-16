@@ -216,6 +216,8 @@ namespace VirtualCollection
                 BeginGetPage(page - 1, true);
         }
 
+        private bool wasRefreshed;
+
         public void Refresh()
         {
             Refresh(RefreshMode.PermitStaleDataWhilstRefreshing);
@@ -225,6 +227,8 @@ namespace VirtualCollection
         {
             _fetchedPages.Clear();
             _itemCount = 0;
+            firstCountChange = true;
+            wasRefreshed = true;
             //_virtualItems.Clear();
             _requestedPages.Clear();
 
@@ -524,8 +528,10 @@ namespace VirtualCollection
 
         private void UpdateCount(int count)
         {
-            if (_itemCount == count)
+            if (_itemCount == count & !wasRefreshed)
                 return;
+
+            wasRefreshed = false;
 
             var wasCurrentBeyondLast = IsCurrentAfterLast;
 
