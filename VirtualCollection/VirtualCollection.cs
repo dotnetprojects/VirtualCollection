@@ -129,17 +129,25 @@ namespace VirtualCollection
 
         public bool CanGroup
         {
-            get { return false; }
+            get { return true; }
         }
 
+        private ObservableCollection<GroupDescription> groupDescriptions = new ObservableCollection<GroupDescription>();
         public ObservableCollection<GroupDescription> GroupDescriptions
         {
-            get { return new ObservableCollection<GroupDescription>(); }
+            get { return groupDescriptions; }
         }
 
+        private ReadOnlyObservableCollection<object> groups = new ReadOnlyObservableCollection<object>(new ObservableCollection<object>());
         public ReadOnlyObservableCollection<object> Groups
         {
-            get { return new ReadOnlyObservableCollection<object>(new ObservableCollection<object>()); }
+            get { return groups; }
+        }
+
+        public void LoadGroups()
+        {
+            groups = _source.GetGroups(GroupDescriptions);
+            OnPropertyChanged(new PropertyChangedEventArgs("Groups"));
         }
 
         public bool IsEmpty

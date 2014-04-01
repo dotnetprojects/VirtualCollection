@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -16,6 +17,8 @@ namespace VirtualCollection
         int? Count { get; }
         void Refresh(RefreshMode mode);
         Task<IList> GetPageAsync(int start, int pageSize, IList<SortDescription> sortDescriptions);
+
+        ReadOnlyObservableCollection<object> GetGroups(ObservableCollection<GroupDescription> groupDescriptions);
     }
     public interface IVirtualCollectionSource<T> : IVirtualCollectionSource
     {
