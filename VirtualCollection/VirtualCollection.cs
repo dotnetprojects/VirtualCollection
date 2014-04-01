@@ -24,7 +24,7 @@ namespace VirtualCollection
                                         IEnquireAboutItemVisibility //where T : class, new()
     {
         private const int IndividualItemNotificationLimit = 100;
-        private const int MaxConcurrentPageRequests = 1;
+        private const int MaxConcurrentPageRequests = 3;
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -318,7 +318,7 @@ namespace VirtualCollection
             _requestedPages.Add(page);
 
             _pendingPageRequests.Push(new PageRequest(page, State, previousNextRequest));
-
+            
             ProcessPageRequests();
         }
 
@@ -357,7 +357,7 @@ namespace VirtualCollection
                         ProcessPageRequests();
                     }, _synchronizationContextScheduler);
 
-                tsk.Start();
+                tsk.Start();                
             }
         }
 
