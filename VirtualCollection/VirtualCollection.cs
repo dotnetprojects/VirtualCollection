@@ -289,8 +289,11 @@ namespace VirtualCollection
             }
             else if (e.ChangeType == ChangeType.Reset)
             {
-                Task.Factory.StartNew(Reset, CancellationToken.None,
-                                      TaskCreationOptions.None, _synchronizationContextScheduler);
+                if (_fetchedPages.Count != 0 || _itemCount != 0)
+                {
+                    Task.Factory.StartNew(Reset, CancellationToken.None,
+                        TaskCreationOptions.None, _synchronizationContextScheduler);
+                }
             }
         }
 
@@ -495,8 +498,8 @@ namespace VirtualCollection
 
             foreach (var page in _fetchedPages)
             {
-                var startIndex = page * _pageSize;
-                var endIndex = (page + 1) * _pageSize;
+                var startIndex = page*_pageSize;
+                var endIndex = (page + 1)*_pageSize;
 
                 for (int i = startIndex; i < endIndex; i++)
                 {
@@ -510,7 +513,7 @@ namespace VirtualCollection
 
             _currentItem = -1;
             UpdateCount(0);
-            
+
             //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
             UpdateCount();
