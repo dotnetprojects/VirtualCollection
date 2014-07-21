@@ -157,7 +157,7 @@ namespace VirtualCollection
 
         public object CurrentItem
         {
-            get { return 0 < CurrentPosition && CurrentPosition < _itemCount ? this[CurrentPosition] : null; }
+            get { return 0 < CurrentPosition && CurrentPosition < _itemCount ? VirtualItems[CurrentPosition].Item : null; }
         }
 
         public int CurrentPosition
