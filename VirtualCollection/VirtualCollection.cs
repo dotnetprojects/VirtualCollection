@@ -39,7 +39,7 @@ namespace VirtualCollection
 
         private uint _state; // used to ensure that data-requests are not stale
 
-        private readonly SparseList<VirtualItem<object>> _virtualItems;
+        public readonly SparseList<VirtualItem<object>> VirtualItems;
         private readonly HashSet<int> _fetchedPages = new HashSet<int>();
         private readonly HashSet<int> _requestedPages = new HashSet<int>();
 
@@ -84,7 +84,7 @@ namespace VirtualCollection
             _source.CountChanged += HandleCountChanged;
             _pageSize = pageSize;
             _equalityComparer = equalityComparer;
-            _virtualItems = CreateItemsCache(pageSize);
+            VirtualItems = CreateItemsCache(pageSize);
             _currentItem = -1;
             _synchronizationContextScheduler = taskScheduler ?? TaskScheduler.FromCurrentSynchronizationContext();
             _mostRecentlyRequestedPages = new MostRecentUsedList<int>(cachedPages);
@@ -248,7 +248,7 @@ namespace VirtualCollection
         {
             _requestedPages.Remove(e.Item);
             _fetchedPages.Remove(e.Item);
-            _virtualItems.RemoveRange(e.Item * _pageSize, _pageSize);
+            VirtualItems.RemoveRange(e.Item * _pageSize, _pageSize);
         }
 
         private SparseList<VirtualItem<object>> CreateItemsCache(int fetchPageSize)
@@ -306,8 +306,8 @@ namespace VirtualCollection
 
                 for (int i = startIndex; i < endIndex; i++)
                 {
-                    if (_virtualItems[i] != null)
-                        _virtualItems[i].IsStale = true;
+                    if (VirtualItems[i] != null)
+                        VirtualItems[i].IsStale = true;
                 }
             }
         }
@@ -378,7 +378,7 @@ namespace VirtualCollection
             for (int i = 0; i < _pageSize; i++)
             {
                 var index = startIndex + i;
-                var virtualItem = _virtualItems[index];
+                var virtualItem = VirtualItems[index];
                 if (virtualItem != null)
                     virtualItem.ErrorFetchingValue();
             }
@@ -412,7 +412,7 @@ namespace VirtualCollection
             for (int i = 0; i < count; i++)
             {
                 var index = startIndex + i;
-                var virtualItem = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<object>(this, index));
+                var virtualItem = VirtualItems[index] ?? (VirtualItems[index] = new VirtualItem<object>(this, index));
                 if (virtualItem.Item == null || results[i] == null || !_equalityComparer.Equals(virtualItem.Item, results[i]))
                     virtualItem.SupplyValue(results[i]);
 
@@ -427,13 +427,13 @@ namespace VirtualCollection
                     else
                     {
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
-                            _virtualItems[startIndex + i].Item, startIndex + i));
+                            VirtualItems[startIndex + i].Item, startIndex + i));
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
                             results[i], startIndex + i));
                     }
 #else
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
-                            _virtualItems[startIndex + i].Item, startIndex + i));
+                            VirtualItems[startIndex + i].Item, startIndex + i));
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
                             results[i], startIndex + i));
 #endif
@@ -503,8 +503,8 @@ namespace VirtualCollection
 
                 for (int i = startIndex; i < endIndex; i++)
                 {
-                    if (_virtualItems[i] != null)
-                        _virtualItems[i].ClearValue();
+                    if (VirtualItems[i] != null)
+                        VirtualItems[i].ClearValue();
                 }
             }
 
@@ -565,7 +565,7 @@ namespace VirtualCollection
                 for (int i = 0; i < delta; i++)
                 {
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, 
-                                                                             _virtualItems[originalItemCount + i],
+                                                                             VirtualItems[originalItemCount + i],
                                                                              originalItemCount + i));
                 }
             }
@@ -573,7 +573,7 @@ namespace VirtualCollection
             {
                 for (int i = 1; i <= Math.Abs(delta); i++)
                 {
-                    var itm = _virtualItems[originalItemCount - i];
+                    var itm = VirtualItems[originalItemCount - i];
                     if (itm != null)
                     {
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
@@ -627,7 +627,7 @@ namespace VirtualCollection
             if (!byIlist)
                 return null;
 
-            var itm = _virtualItems[index] ?? (_virtualItems[index] = new VirtualItem<object>(this, index));
+            var itm = VirtualItems[index] ?? (VirtualItems[index] = new VirtualItem<object>(this, index));
 
             itm.IsAskedByIndex = byIlist;
 
@@ -771,7 +771,7 @@ namespace VirtualCollection
 
         int IList.IndexOf(object value)
         {
-            var itm = _virtualItems.FirstOrDefault(x => x != null && x.Item == value);
+            var itm = VirtualItems.FirstOrDefault(x => x != null && x.Item == value);
 
             if (itm != null)
                 return itm.Index;
