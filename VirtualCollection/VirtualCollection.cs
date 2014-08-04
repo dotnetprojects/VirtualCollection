@@ -8,6 +8,11 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+#if NETFX_CORE
+using Windows.UI.Xaml.Data;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+#endif
 
 namespace VirtualCollection
 {
@@ -17,9 +22,14 @@ namespace VirtualCollection
     /// <typeparam name="T"></typeparam>
     /// <remarks>The trick to ensuring that the silverlight datagrid doesn't attempt to enumerate all
     /// items from its DataSource in one shot is to implement both IList and ICollectionView.</remarks>
-    public class VirtualCollection : IList<object>, IList, ICollectionView, INotifyPropertyChanged,
+    public class VirtualCollection : IList<object>, IList, INotifyPropertyChanged,
 #if !SILVERLIGHT
                                         IItemProperties,
+#endif
+#if NETFX_CORE
+                                        ICollectionViewEx,
+#else
+                                        ICollectionView,
 #endif
                                         IEnquireAboutItemVisibility //where T : class, new()
     {
@@ -33,6 +43,7 @@ namespace VirtualCollection
         public event EventHandler<ItemsRealizedEventArgs> ItemsRealized;
         public event CurrentChangingEventHandler CurrentChanging;
         public event EventHandler CurrentChanged;
+        
         private readonly IVirtualCollectionSource _source;
         private readonly int _pageSize;
         private readonly IEqualityComparer<object> _equalityComparer;
@@ -93,7 +104,35 @@ namespace VirtualCollection
             (_sortDescriptions as INotifyCollectionChanged).CollectionChanged += HandleSortDescriptionsChanged;
         }
 
+#if NETFX_CORE
+        public event VectorChangedEventHandler<object> VectorChanged;
 
+        event EventHandler<object> ICollectionView.CurrentChanged
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IObservableVector<object> CollectionGroups
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         public IVirtualCollectionSource Source
         {
@@ -116,6 +155,7 @@ namespace VirtualCollection
         {
             get { return false; }
         }
+
 
         public SortDescriptionCollection SortDescriptions
         {
@@ -211,6 +251,14 @@ namespace VirtualCollection
         protected uint State
         {
             get { return _state; }
+        }
+       
+        public bool HasMoreItems
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public void RealizeItemRequested(int index, bool byIndex)
@@ -802,7 +850,7 @@ namespace VirtualCollection
         {
             throw new NotImplementedException();
         }
-
+        
         private struct PageRequest
         {
             public readonly int Page;
