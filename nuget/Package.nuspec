@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>DotNetProjects.VirtualCollection</id>
+    <version>$version$</version>
+    <authors>DotNetProjects</authors>
+    <owners>DotNetProjects</owners>
+    <licenseUrl>https://github.com/dotnetprojects/VirtualCollection/blob/master/License.txt</licenseUrl>
+    <projectUrl>https://github.com/dotnetprojects/VirtualCollection</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>VirtualCollection</description>
+    <copyright>Copyright 2015</copyright>
+  </metadata>
+  <files>
+    <file src="..\VirtualCollection\Bin\Debug\VirtualCollectionWPF.dll" target="lib\net40" />
+    <file src="..\VirtualCollection\Bin\Debug\VirtualCollectionWPF.pdb" target="lib\net40" />	
+  </files>
+</package>
