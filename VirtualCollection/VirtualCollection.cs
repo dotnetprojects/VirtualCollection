@@ -35,6 +35,7 @@ namespace VirtualCollection
     {
         private const int IndividualItemNotificationLimit = 100;
         private const int MaxConcurrentPageRequests = 3;
+        private const int MaxItemCountForEnumerator = 200;
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -778,7 +779,7 @@ namespace VirtualCollection
         {
             for (var i = 0; i < _itemCount; i++)
             {
-                yield return getbyIndex(i, false);
+                yield return getbyIndex(i, _itemCount < MaxItemCountForEnumerator);
             }
         }
 
