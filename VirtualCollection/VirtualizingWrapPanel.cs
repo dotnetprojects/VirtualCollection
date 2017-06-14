@@ -101,7 +101,9 @@ namespace VirtualCollection
         {
             if (_itemsControl == null)
             {
-                return availableSize;
+                
+                return new Size(double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width,
+                    double.IsInfinity(availableSize.Height) ? 0 : availableSize.Height);
             }
 
             _isInMeasure = true;
