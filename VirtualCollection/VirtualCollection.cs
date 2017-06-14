@@ -22,7 +22,7 @@ namespace VirtualCollection
     /// <typeparam name="T"></typeparam>
     /// <remarks>The trick to ensuring that the silverlight datagrid doesn't attempt to enumerate all
     /// items from its DataSource in one shot is to implement both IList and ICollectionView.</remarks>
-    public class VirtualCollection : IList<object>, IList, INotifyPropertyChanged,
+    public partial class VirtualCollection : IList<object>, IList, INotifyPropertyChanged,
 #if !SILVERLIGHT
                                         IItemProperties,
 #endif
