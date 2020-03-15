@@ -1,15 +1,19 @@
-version: 1.0.{build}
+version: 2.0.{build}
 
 branches:
   only:
     - master
 
-assembly_info:
+image: Visual Studio 2019
+
+dotnet_csproj:
   patch: true
-  file: AssemblyInfo.*
-  assembly_version: "{version}"
-  assembly_file_version: "{version}"
-  assembly_informational_version: "{version}"
+  file: 'src\IP.i4o\DotNetProjects.IndexedLinq.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
 
 configuration: Debug
 
@@ -19,14 +23,9 @@ before_build:
 build:
   project: VirtualCollection.sln
 
-after_build:
-  - ps: .\nuget\pack.ps1
-
 test: off
 
 artifacts:
-  - path: VirtualCollection\Bin\Debug\VirtualCollectionWPF.dll
-  - path: VirtualCollection\Bin\Debug\VirtualCollectionWPF.pdb
   - path: '**\DotNetProjects*.nupkg'
 
 #uncomment to publish to NuGet
