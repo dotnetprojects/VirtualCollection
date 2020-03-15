@@ -1,72 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AEEAA84D-4123-4BA1-8B05-9408D6035F4A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtualCollectionWPF</RootNamespace>
-    <AssemblyName>VirtualCollectionWPF</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DeferredActionInvoker.cs" />
-    <Compile Include="Disposer.cs" />
-    <Compile Include="IEnquireAboutItemVisibility.cs" />
-    <Compile Include="INotifyBusyness.cs" />
-    <Compile Include="IQueryableExtensions.cs" />
-    <Compile Include="ItemsRealizedEventArgs.cs" />
-    <Compile Include="IVirtualCollectionSource.cs" />
-    <Compile Include="MostRecentUsedList.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RefreshMode.cs" />
-    <Compile Include="SparseList.cs" />
-    <Compile Include="VirtualCollection.cs" />
-    <Compile Include="VirtualCollectionSource.cs" />
-    <Compile Include="VirtualCollection_IEditableCollectionView.cs" />
-    <Compile Include="VirtualItem.cs" />
-    <Compile Include="WeakCollectionViewWrapper.cs" />
-    <Compile Include="WeakEventListener.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+    <PropertyGroup>
+        <TargetFrameworks>netcoreapp3.0;net4</TargetFrameworks>
+        <UseWPF>true</UseWPF>
+        <Description>DotNetProjects.VirtualCollection</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>DotNetProjects.VirtualCollection</PackageId>
+        <Authors>DotNetProjects</Authors>
+        <Company>DotNetProjects</Company>
+        <Product>DotNetProjects.VirtualCollection</Product>
+        <Copyright>2020 DotNetProjects</Copyright>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
+        <FileVersion>2.0.0.0</FileVersion>
+        <Version>2.0.0</Version>
+        <PackageLicenseFile>License.txt</PackageLicenseFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+      <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="License.txt">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+    </ItemGroup>
 </Project>

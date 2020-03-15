@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NETFX_CORE
-using Windows.UI.Xaml.Controls;
-using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Core;
-#else
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-#endif
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace VirtualCollection
 {
-    public class VirtualizingWrapPanel : VirtualizingPanel
-#if !NETFX_CORE
-        , IScrollInfo
-#endif
+    public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
     {
         private const double ScrollLineAmount = 16.0;
 
@@ -36,11 +28,7 @@ namespace VirtualCollection
         private static readonly DependencyProperty VirtualItemIndexProperty =
             DependencyProperty.RegisterAttached("VirtualItemIndex", typeof(int), typeof(VirtualizingWrapPanel), new PropertyMetadata(-1));
 
-#if NETFX_CORE
-        private ItemContainerGenerator _itemsGenerator;
-#else
         private IRecyclingItemContainerGenerator _itemsGenerator;
-#endif
 
         private bool _isInMeasure;
 
@@ -68,13 +56,11 @@ namespace VirtualCollection
 
         public VirtualizingWrapPanel()
         {
-#if NETFX_CORE
-            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, Initialize);
+#if NETCORE
+            Dispatcher.BeginInvoke(Initialize);
 #else
-            if (!DesignerProperties.IsInDesignTool)
-            {
-                Dispatcher.BeginInvoke(Initialize);
-            }
+            
+            Dispatcher.BeginInvoke(new Action(Initialize));      
 #endif
         }
 
@@ -204,7 +190,7 @@ namespace VirtualCollection
         {
             foreach (var child in Children)
             {
-                var virtualItemIndex = GetVirtualItemIndex(child);
+                var virtualItemIndex = GetVirtualItemIndex((DependencyObject)child);
 
                 if (virtualItemIndex < layoutInfo.FirstRealizedItemIndex || virtualItemIndex > layoutInfo.LastRealizedItemIndex)
                 {
@@ -215,7 +201,7 @@ namespace VirtualCollection
                     }
                 }
 
-                SetVirtualItemIndex(child, -1);
+                SetVirtualItemIndex((DependencyObject)child, -1);
             }
         }
 
@@ -223,7 +209,7 @@ namespace VirtualCollection
         {
             foreach (var child in Children)
             {
-                child.Arrange(_childLayouts[child]);
+                ((UIElement)child).Arrange(_childLayouts[(UIElement)child]);
             }
 
             return finalSize;
@@ -395,6 +381,11 @@ namespace VirtualCollection
         }
 
         public Rect MakeVisible(UIElement visual, Rect rectangle)
+        {
+            return new Rect();
+        }
+
+        public Rect MakeVisible(Visual visual, Rect rectangle)
         {
             return new Rect();
         }
