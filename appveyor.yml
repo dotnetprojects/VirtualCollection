@@ -8,7 +8,7 @@ image: Visual Studio 2019
 
 dotnet_csproj:
   patch: true
-  file: 'src\IP.i4o\DotNetProjects.IndexedLinq.csproj'
+  file: '**\*.csproj'
   version: '{version}'
   package_version: '{version}'
   assembly_version: '{version}'
